@@ -14,7 +14,13 @@ static int menuModify();
 static int modifyName(sClient* list, int len, int id);
 static int modifyLastName(sClient* list, int len, int id);
 static int modifyCUIL(sClient* list, int len, int id);
-
+/*
+ * \brief initialize an sClient array
+ * \param list sClient* Pointer to array of clients.
+ * \param len int Array lenght.
+ * \return Return (0) if Error [Invalir lengt or NULL pointer ] - (1) if Ok
+ *
+ * */
 
 int initClient(sClient* list,int len){
 	int ret = 0;
@@ -22,13 +28,17 @@ int initClient(sClient* list,int len){
 	if(list != NULL && len >0){
 		for(i=0;i<len;i++){
 			list[i].isEmpty = 1;
-			list[i].cuil = 0;
+			strcpy(list[i].cuil,"0");
 		}
 		ret = 1;
 	}
 	return ret;
 }
-
+/*
+ * \brief displays a menu of options.
+ * \return Return value option
+ *
+ * */
 static int menuModify(){
 	int option;
 
@@ -42,7 +52,7 @@ static int menuModify(){
 	return option;
 }
 /*
- * \brief find an client by ID  and returns the index position in array
+ * \brief print a sClient based on the ID entered
  * \param list client* Pointer to array of clients.
  * \param len int Array lenght.
  * \param id int
@@ -58,7 +68,7 @@ int printLoadedClient(sClient* list,int len,int id){
 		printf("\n\nID   NOMBRE   APELLIDO   CUIL\n");
 		for (i = 0; i < len; i++) {
 			if (list[i].isEmpty == 0 && list[i].id == id +1 ) {
-				printf("%d%10s%10s    %I64d	\n\n", list[i].id, list[i].name,
+				printf("%d%10s%10s    %s	\n\n", list[i].id, list[i].name,
 						list[i].lastName, list[i].cuil);
 				ret = 0;
 				break;
@@ -69,131 +79,202 @@ int printLoadedClient(sClient* list,int len,int id){
 	return ret;
 }
 
-
-sClient newClient(char* name,char* lastName,long long int cuil,int id){
+/*
+ * \brief loads a sClient and returns it with its loaded values
+ * \param name char*
+ * \param lastName char*
+ * \param cuil char*
+ * \param id int
+ * \return Return auxClient sClient.
+ * */
+sClient newClient(char* name,char* lastName,char* cuil,int id){
 	sClient auxClient;
 
 	auxClient.id = id +1;
 	strcpy(auxClient.name,name);
 	strcpy(auxClient.lastName,lastName);
-	auxClient.cuil = cuil;
+	strcpy(auxClient.cuil,cuil);
 	auxClient.isEmpty = 0;
 
 	return auxClient;
 }
-
+/*
+ * \brief asks the user for the data they want to upload
+ * \param list sClient* Pointer to array of sClients.
+ * \param len int Array lenght.
+ * \param pId int*
+ * \return Return (0) if Error [Invalir lengt or NULL pointer ] - (1) if Ok
+ *
+ * */
 int addDataClient(sClient* list, int len, int* pId){
 	int ret = 0;
 	char bufferName[51];
 	char bufferLastName[51];
-	long long int bufferCUIL;
+	char bufferCUIL[14];
 
 	if(list != NULL && len >0){
+		system("CLS");
 		getString(bufferName,"Ingrese el nombre del cliente\n","Error, nombre invalido\n",51,2);
 		getString(bufferLastName,"Ingrese el apellido del cliente\n","Error, apellido invalido\n",51,2);
-		getCuil(&bufferCUIL,"Ingrese el CUIL del cliente\n","Error, cuil incorrecto\n",11,2);
+		getCuil(bufferCUIL,"Ingrese el CUIL del cliente\n","Error, cuil incorrecto\n",14,2);
 
 		list[*pId] = newClient(bufferName,bufferLastName,bufferCUIL,*pId);
 		printLoadedClient(list,len,*pId);
 		*pId = *pId +1;
+		system("PAUSE");
+		system("CLS");
 		ret = 1;
 	}
 
 	return ret;
 }
 
-
+/*
+ * \brief modify the name of a sClient
+ * \param list client* Pointer to array of sClients.
+ * \param len int Array lenght.
+ * \param id int
+ * \return Return (0) if Error [Invalir lengt or NULL pointer or if can't find a client] - (1) if Ok
+ *
+ * */
 static int modifyName(sClient* list, int len, int id){
 	int ret = 0;
 	char buffername[51];
 	char respuesta[10];
 
 	if(list != NULL && len >0){
-		getString(buffername,"Ingrese el nombre","Error, nombre invalido",51,2);
-		getString(respuesta, "Confirma la modificacion\n [SI/NO]\n",
-				"Opcion incorrecta\n", 10, 2);
-		strupr(respuesta);
-		if (strcmp(respuesta, "SI") == 0) {
-			strcpy(list[id -1].name,buffername);
-			printf("MODIFICACION hecha\n");
+		if(getString(buffername,"Ingrese el nombre","Error, nombre invalido",51,2)){
+			getString(respuesta, "Confirma la modificacion\n [SI/NO]\n",
+					"Opcion incorrecta\n", 10, 2);
+			strupr(respuesta);
+			if (strcmp(respuesta, "SI") == 0) {
+				strcpy(list[id -1].name,buffername);
+				printf("MODIFICACION hecha\n");
 
-			ret = 1;
-		} else if (strcmp(respuesta, "NO") == 0) {
-			printf("MODIFICACION anulada\n");
+				ret = 1;
+			} else if (strcmp(respuesta, "NO") == 0) {
+				printf("MODIFICACION anulada\n");
+			}
+		}else{
+			ret = 0;
+			printf("Verifique los datos ingresados\n");
 		}
 
 	}
 
 	return ret;
 }
+/*
+ * \brief modify the lastname of a sClient
+ * \param list client* Pointer to array of sClients.
+ * \param len int Array lenght.
+ * \param id int
+ * \return Return (0) if Error [Invalir lengt or NULL pointer or if can't find a client] - (1) if Ok
+ *
+ * */
 static int modifyLastName(sClient* list, int len, int id){
 	int ret = 0;
 	char bufferLastName[51];
 	char respuesta[10];
 
 	if(list != NULL && len >0){
-		getString(bufferLastName,"Ingrese el nombre","Error, nombre invalido",51,2);
-		getString(respuesta, "Confirma la modificacion\n [SI/NO]\n",
-				"Opcion incorrecta\n", 10, 2);
-		strupr(respuesta);
-		if (strcmp(respuesta, "SI") == 0) {
-			strcpy(list[id -1].name,bufferLastName);
-			printf("MODIFICACION hecha\n");
+		if(getString(bufferLastName,"Ingrese el nombre","Error, nombre invalido",51,2)){
+			getString(respuesta, "Confirma la modificacion\n [SI/NO]\n",
+					"Opcion incorrecta\n", 10, 2);
+			strupr(respuesta);
+			if (strcmp(respuesta, "SI") == 0) {
+				strcpy(list[id -1].name,bufferLastName);
+				printf("MODIFICACION hecha\n");
 
-			ret = 1;
-		} else if (strcmp(respuesta, "NO") == 0) {
-			printf("MODIFICACION anulada\n");
+				ret = 1;
+			} else if (strcmp(respuesta, "NO") == 0) {
+				printf("MODIFICACION anulada\n");
+			}
+		}else{
+			ret = 0;
+			printf("Verifique los datos ingresados\n");
 		}
+
 
 	}
 
 	return ret;
 }
+/*
+ * \brief modify the cuil of a sClient
+ * \param list client* Pointer to array of sClients.
+ * \param len int Array lenght.
+ * \param id int
+ * \return Return (0) if Error [Invalir lengt or NULL pointer or if can't find a client] - (1) if Ok
+ *
+ * */
 static int modifyCUIL(sClient* list, int len, int id){
 	int ret = 0;
-	long long int bufferCuil;
+	char bufferCuil[14];
 	char respuesta[10];
 
 	if(list != NULL && len >0){
-		getCuil(&bufferCuil,"Ingrese el CUIL","Error, CUIL invalido",11,2);
-		getString(respuesta, "Confirma la modificacion\n [SI/NO]\n",
-				"Opcion incorrecta\n", 10, 2);
-		strupr(respuesta);
-		if (strcmp(respuesta, "SI") == 0) {
-			list[id -1].cuil = bufferCuil;
-			printf("MODIFICACION hecha\n");
+		if(getCuil(bufferCuil,"Ingrese el CUIL","Error, CUIL invalido",14,2)){
+			getString(respuesta, "Confirma la modificacion\n [SI/NO]\n",
+					"Opcion incorrecta\n", 10, 2);
+			strupr(respuesta);
+			if (strcmp(respuesta, "SI") == 0) {
+				strcpy(list[id -1].cuil,bufferCuil);
+				printf("MODIFICACION hecha\n");
 
-			ret = 1;
-		} else if (strcmp(respuesta, "NO") == 0) {
-			printf("MODIFICACION anulada\n");
+				ret = 1;
+			} else if (strcmp(respuesta, "NO") == 0) {
+				printf("MODIFICACION anulada\n");
+			}
+		}else{
+			ret = 0;
+			printf("Verifique los datos ingresados\n");
 		}
 
 	}
 
 	return ret;
 }
+/*
+ * \brief submenu of the section modify client
+ * \param list client* Pointer to array of sClients.
+ * \param len int Array lenght.
+ * \param id int
+ * \return Return (-1) if Error [Invalir lengt or NULL pointer or if can't find a client] - (0) if Ok
+ *
+ * */
 int modifyClient(sClient* list, int len){
 	int ret = 0;
 	int option;
 	int bufferId;
 
 	do{
-		getNumber(&bufferId,"Ingrese el ID del cliente que desea modificar\n","Error, id invalido\n",1,50,2);
-		printLoadedClient(list,len,bufferId-1);
+		system("CLS");
+
 		option = menuModify();
 		switch(option){
 		case 1:
+			system("CLS");
+			getNumber(&bufferId,"Ingrese el ID del cliente que desea modificar\n","Error, id invalido\n",1,50,2);
+			printLoadedClient(list,len,bufferId-1);
 			modifyName(list,len,bufferId);
 			break;
 		case 2:
+			system("CLS");
+			getNumber(&bufferId,"Ingrese el ID del cliente que desea modificar\n","Error, id invalido\n",1,50,2);
+			printLoadedClient(list,len,bufferId-1);
 			modifyLastName(list,len,bufferId);
 			break;
 		case 3:
+			system("CLS");
+			getNumber(&bufferId,"Ingrese el ID del cliente que desea modificar\n","Error, id invalido\n",1,50,2);
+			printLoadedClient(list,len,bufferId-1);
 			modifyCUIL(list,len,bufferId);
 			break;
 		case 4:
 			break;
 		}
+
 	}while(option != 4);
 
 

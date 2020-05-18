@@ -135,7 +135,7 @@ int promedioArray (int* pArray,int size,int* pArray2, int size2,float* pPromedio
 
 
 
-int getCuil(long long int *pResultado, char *mensaje, char *mensajeError,
+int getCuil(char *cadena, char *mensaje, char *mensajeError,
 		int len, int reintentos);
 
 

@@ -9,10 +9,14 @@
 #define LOAN_H_
 typedef struct{
 	int id;
+	char typeStatus[10];
+}sStatus;
+typedef struct{
+	int id;
 	int idClient;
 	float amount;
 	int payments;
-	int status;
+	sStatus status;
 }sLoan;
 
 

@@ -12,8 +12,8 @@
 #define LEN_ARRAY 4096
 
 /*
- * \brief funcion para crear un menu de opciones.
- * \return int retorna la opcion elegida.
+ * \brief function to create a menu of options.
+ * \return int returns the chosen option.
  * */
 int menu()
 {
@@ -358,28 +358,60 @@ int getString (char* cadena, char* mensaje, char* mensajeError, int len, int rei
 	return ret;
 }
 
-int getCuil(long long int *pResultado, char *mensaje, char *mensajeError,
+/*
+ * \brief  se utiliza para obtener el cuil de un cliente
+ * \param cadena char*
+ * \param mensaje char*
+ * \param mensajeError char*
+ * \param len int
+ * \param reintentos int
+ * \return Return (0) if Error [Invalir lengt or NULL pointer] - (1) if Ok
+ *
+ * */
+int getCuil(char *cadena, char *mensaje, char *mensajeError,
 		int len, int reintentos) {
-	int ret=0;
-	long long int num;
-	if (pResultado != NULL && mensaje != NULL && mensajeError != NULL
-			&& len >0 && reintentos >= 0) {
-		while (reintentos > 0) {
-			printf("%s", mensaje);
-			if (getLong(&num))  // si scanf =1 es porque pudo abrir la variable
+	int ret =0;
+		char buffer [LEN_ARRAY];
+		if(cadena != NULL && mensaje != NULL && mensajeError != NULL && len >0 && reintentos >=0)
+		{
+			while(reintentos > 0)
 			{
-
-				break;
-
+				printf("%s",mensaje);
+				fflush(stdin);
+				fgets(buffer,LEN_ARRAY,stdin);
+				buffer[strlen(buffer)-1] = '\0';
+				if(isNumber(buffer))
+				{
+					if(strlen(buffer) == 1)
+					{
+						reintentos--;
+						printf("%s",mensajeError);
+						continue;
+					}
+					if(strlen(buffer) == 0)
+					{
+						reintentos--;
+						printf("%s",mensajeError);
+						continue;
+					}
+					if(strlen(buffer) <= len)
+					{
+						break;
+					}
+				}
+				else
+				{
+					reintentos--;
+					printf("%s",mensajeError);
+				}
 			}
-			reintentos--;
-			printf("%s", mensajeError);
-		}
-		if (reintentos > 0) {
-			*pResultado = num; //se asigna en la direccion de memoria del parametro el valor del numero ingresado.
-			ret = 1;
+			if(reintentos > 0)
+			{
+				strcpy(cadena , buffer);
+				ret = 1;
+			}
 		}
 
-	}
+		return ret;
 	return ret;
 }

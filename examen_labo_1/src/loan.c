@@ -10,12 +10,21 @@
 #include "utn.h"
 #include "informes.h"
 
+/*
+ * \brief initialize an sLoan array
+ * \param list sloan* Pointer to array of sLoan.
+ * \param len int Array lenght.
+ * \return Return (0) if Error [Invalir lengt or NULL pointer] - (1) if Ok
+ *
+ * */
 int initLoans(sLoan* list,int len){
 	int ret = 0;
-		int i;
+	int i;
+	sStatus status = {-1,"inactivo"};
+
 		if(list != NULL && len >0){
 			for(i=0;i<len;i++){
-				list[i].status = -1;
+				list[i].status = status;
 				list[i].amount = 0;
 				list[i].payments = 0;
 			}
@@ -23,6 +32,14 @@ int initLoans(sLoan* list,int len){
 		}
 		return ret;
 }
+/*
+ * \brief print a sLoan based on the ID entered
+ * \param list sLoan* Pointer to array of sLoan.
+ * \param len int Array lenght.
+ * \param id int
+ * \return Return (0) if Error [Invalir lengt or NULL pointer or if can't find a client] - (1) if Ok
+ *
+ * */
 
 int printLoadedLoan(sLoan* list,int len, int id){
 	int ret = 0;
@@ -31,7 +48,7 @@ int printLoadedLoan(sLoan* list,int len, int id){
 	if(list != NULL && len > 0 && id >= 0){
 		printf("ID		ID DEL CLIENTE		IMPORTE		COUTAS\n\n");
 		for (i = 0; i < len; i++) {
-			if (list[i].status == 1 && list[i].id == id +1 ) {
+			if (list[i].status.id == 1 && list[i].id == id +1 ) {
 				printf("%d		%d			%.2f		%d	\n", list[i].id, list[i].idClient,
 						list[i].amount, list[i].payments);
 				ret = 1;
@@ -42,19 +59,34 @@ int printLoadedLoan(sLoan* list,int len, int id){
 
 	return ret;
 }
-
+/*
+ * \brief loads a sLoan and returns it with its loaded values
+ * \param list sLoan* Pointer to array of sLoan.
+ * \param len int Array lenght.
+ * \param id int
+ * \return Return auxLoan sloan
+ *
+ * */
 sLoan newLoan(int idClient, float amount, int payments, int id){
 	sLoan auxLoan;
+	sStatus status = {1,"activo"};
 
 	auxLoan.idClient = idClient;
 	auxLoan.amount = amount;
 	auxLoan.payments = payments;
 	auxLoan.id = id +1 ;
-	auxLoan.status = 1;
+	auxLoan.status = status;
 
 	return auxLoan;
 }
-
+/*
+ * \brief asks the user for the data they want to upload
+ * \param list sLoan* Pointer to array of sLoan.
+ * \param len int Array lenght.
+ * \param id int
+ * \return Return (0) if Error [Invalir lengt or NULL pointer] - (1) if Ok
+ *
+ * */
 int addDataLoan(sLoan* list,int len, int* pId){
   int ret = 0;
   int bufferIdClient;
@@ -62,13 +94,16 @@ int addDataLoan(sLoan* list,int len, int* pId){
   int bufferPayments;
 
   if(list != NULL && len > 0){
-	  getNumber(&bufferIdClient,"Ingrese el Id del cliente","Error, id invalido\n",1,50,2);
-	  getNumberDecimal(&bufferAmount,"Ingrese el importe del prestamo","Error, importe invalido",1000,30000,2);
-	  getNumber(&bufferPayments,"Ingrese las cuotas del rpestamos","Error, cuotas invalidas",3,12,2);
+	  system("CLS");
+	  getNumber(&bufferIdClient,"Ingrese el Id del cliente\n","Error, id invalido\n",1,50,2);
+	  getNumberDecimal(&bufferAmount,"Ingrese el importe del prestamo\n","Error, importe invalido",1000,30000,2);
+	  getNumber(&bufferPayments,"Ingrese las cuotas del rpestamos\n","Error, cuotas invalidas",3,12,2);
 
 	  list[*pId] = newLoan(bufferIdClient, bufferAmount,bufferPayments,*pId);
 	  printLoadedLoan(list,len,*pId);
 	  *pId = *pId +1;
+		system("PAUSE");
+		system("CLS");
 	  ret = 1;
   }
 

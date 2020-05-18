@@ -11,7 +11,7 @@ typedef struct{
 	int id;
 	char name[51];
 	char lastName[51];
-	long long int cuil;
+	char cuil[14];
 	int isEmpty;
 }sClient;
 
@@ -20,6 +20,6 @@ typedef struct{
 int initClient(sClient* list,int len);
 int printLoadedClient(sClient* list,int len,int id);
 int addDataClient(sClient* list, int len, int* pId);
-sClient newClient(char* name,char* lastName,long long int cuil,int id);
+sClient newClient(char* name,char* lastName,char* cuil,int id);
 int modifyClient(sClient* list, int len);
 

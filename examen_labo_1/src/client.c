@@ -89,12 +89,14 @@ int printLoadedClient(sClient* list,int len,int id){
  * */
 sClient newClient(char* name,char* lastName,char* cuil,int id){
 	sClient auxClient;
+	if(name != NULL && lastName != NULL && cuil != NULL && id >=0){
+		auxClient.id = id +1;
+		strcpy(auxClient.name,name);
+		strcpy(auxClient.lastName,lastName);
+		strcpy(auxClient.cuil,cuil);
+		auxClient.isEmpty = 0;
 
-	auxClient.id = id +1;
-	strcpy(auxClient.name,name);
-	strcpy(auxClient.lastName,lastName);
-	strcpy(auxClient.cuil,cuil);
-	auxClient.isEmpty = 0;
+	}
 
 	return auxClient;
 }
@@ -112,7 +114,7 @@ int addDataClient(sClient* list, int len, int* pId){
 	char bufferLastName[51];
 	char bufferCUIL[14];
 
-	if(list != NULL && len >0){
+	if(list != NULL && len >0 && pId != NULL){
 		system("CLS");
 		getString(bufferName,"Ingrese el nombre del cliente\n","Error, nombre invalido\n",51,2);
 		getString(bufferLastName,"Ingrese el apellido del cliente\n","Error, apellido invalido\n",51,2);
@@ -142,7 +144,7 @@ static int modifyName(sClient* list, int len, int id){
 	char buffername[51];
 	char respuesta[10];
 
-	if(list != NULL && len >0){
+	if(list != NULL && len >0 && id >=0){
 		if(getString(buffername,"Ingrese el nombre","Error, nombre invalido",51,2)){
 			getString(respuesta, "Confirma la modificacion\n [SI/NO]\n",
 					"Opcion incorrecta\n", 10, 2);
@@ -177,7 +179,7 @@ static int modifyLastName(sClient* list, int len, int id){
 	char bufferLastName[51];
 	char respuesta[10];
 
-	if(list != NULL && len >0){
+	if(list != NULL && len >0 && id >= 0){
 		if(getString(bufferLastName,"Ingrese el nombre","Error, nombre invalido",51,2)){
 			getString(respuesta, "Confirma la modificacion\n [SI/NO]\n",
 					"Opcion incorrecta\n", 10, 2);
@@ -213,7 +215,7 @@ static int modifyCUIL(sClient* list, int len, int id){
 	char bufferCuil[14];
 	char respuesta[10];
 
-	if(list != NULL && len >0){
+	if(list != NULL && len >0 && id >= 0){
 		if(getCuil(bufferCuil,"Ingrese el CUIL","Error, CUIL invalido",14,2)){
 			getString(respuesta, "Confirma la modificacion\n [SI/NO]\n",
 					"Opcion incorrecta\n", 10, 2);
@@ -248,34 +250,37 @@ int modifyClient(sClient* list, int len){
 	int option;
 	int bufferId;
 
-	do{
-		system("CLS");
+	if(list != NULL && len >0){
 
-		option = menuModify();
-		switch(option){
-		case 1:
+		do{
 			system("CLS");
-			getNumber(&bufferId,"Ingrese el ID del cliente que desea modificar\n","Error, id invalido\n",1,50,2);
-			printLoadedClient(list,len,bufferId-1);
-			modifyName(list,len,bufferId);
-			break;
-		case 2:
-			system("CLS");
-			getNumber(&bufferId,"Ingrese el ID del cliente que desea modificar\n","Error, id invalido\n",1,50,2);
-			printLoadedClient(list,len,bufferId-1);
-			modifyLastName(list,len,bufferId);
-			break;
-		case 3:
-			system("CLS");
-			getNumber(&bufferId,"Ingrese el ID del cliente que desea modificar\n","Error, id invalido\n",1,50,2);
-			printLoadedClient(list,len,bufferId-1);
-			modifyCUIL(list,len,bufferId);
-			break;
-		case 4:
-			break;
-		}
 
-	}while(option != 4);
+			option = menuModify();
+			switch(option){
+			case 1:
+				system("CLS");
+				getNumber(&bufferId,"Ingrese el ID del cliente que desea modificar\n","Error, id invalido\n",1,50,2);
+				printLoadedClient(list,len,bufferId-1);
+				modifyName(list,len,bufferId);
+				break;
+			case 2:
+				system("CLS");
+				getNumber(&bufferId,"Ingrese el ID del cliente que desea modificar\n","Error, id invalido\n",1,50,2);
+				printLoadedClient(list,len,bufferId-1);
+				modifyLastName(list,len,bufferId);
+				break;
+			case 3:
+				system("CLS");
+				getNumber(&bufferId,"Ingrese el ID del cliente que desea modificar\n","Error, id invalido\n",1,50,2);
+				printLoadedClient(list,len,bufferId-1);
+				modifyCUIL(list,len,bufferId);
+				break;
+			case 4:
+				break;
+			}
+
+		}while(option != 4);
+	}
 
 
 	return ret;

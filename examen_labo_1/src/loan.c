@@ -93,10 +93,10 @@ int addDataLoan(sLoan* list,int len, int* pId){
   float bufferAmount;
   int bufferPayments;
 
-  if(list != NULL && len > 0){
+  if(list != NULL && len > 0 && pId != NULL){
 	  system("CLS");
 	  getNumber(&bufferIdClient,"Ingrese el Id del cliente\n","Error, id invalido\n",1,50,2);
-	  getNumberDecimal(&bufferAmount,"Ingrese el importe del prestamo\n","Error, importe invalido",1000,30000,2);
+	  getNumberDecimal(&bufferAmount,"Ingrese el importe del prestamo\n","Error, importe invalido entre 1000 y 30000\n",1000,30000,2);
 	  getNumber(&bufferPayments,"Ingrese las cuotas del rpestamos\n","Error, cuotas invalidas",3,12,2);
 
 	  list[*pId] = newLoan(bufferIdClient, bufferAmount,bufferPayments,*pId);

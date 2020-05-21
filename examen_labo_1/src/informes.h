@@ -23,3 +23,9 @@ int clientWithMoreLoansActive(sClient* listCli,int lenCli, sLoan* listLoan, int 
 int clientWithMoreLoansPayOff(sClient* listCli,int lenCli, sLoan* listLoan, int lenLoan);
 int reportClient(sClient* listCli,int lenCli, sLoan* listLoan, int lenLoan);
 int reportLoans(sLoan* list, int len);
+int clientWithMoreLoan(sClient* listCli,int lenCli, sLoan* listLoan, int lenLoan);
+int reportLoanA(sLoan* list, int len);
+int reportLoanB(sLoan* list, int len);
+int reportLoanC(sLoan* list, int len);
+
+

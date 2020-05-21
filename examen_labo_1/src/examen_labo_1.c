@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "utn.h"
-#include "validation.h"
 #include "informes.h"
 #define MAX_CLIENT 50
 #define MAX_LOAN 50

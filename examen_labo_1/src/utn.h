@@ -4,7 +4,7 @@
  *  Created on: 11 abr. 2020
  *      Author: pocho
  */
-
+#include "validation.h"
 #ifndef UTN_H_
 #define UTN_H_
 #define LEN_ARRAY 4096 //ajustar el len de los arrays de string si se desea tener mayor espacio.

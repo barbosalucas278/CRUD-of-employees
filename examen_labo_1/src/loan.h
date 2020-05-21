@@ -9,7 +9,7 @@
 #define LOAN_H_
 typedef struct{
 	int id;
-	char typeStatus[10];
+	char typeStatus[10]; // -1 inactivo | 0 saldado | 1 activo
 }sStatus;
 typedef struct{
 	int id;
